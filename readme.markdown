@@ -38,6 +38,13 @@ Read `n` bytes of framed data into a buffer `buf`.
 
 If all the written data has been read, `buf` is padded with trailing stop bits.
 
+## var bits = p.readBits(n)
+
+Read `n` bits of framed data into `bits`, an array of 0s and 1s.
+
+If all the written data has been read, `bits` is padded with trailing stop bits
+(1s).
+
 # install
 
 With [npm](https://npmjs.org) do:
