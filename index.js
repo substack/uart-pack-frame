@@ -20,9 +20,27 @@ Frame.prototype.write = function (buf) {
 };
 
 Frame.prototype.read = function (n) {
+    var bits = this.readBits(n * 8);
+    var output = new Buffer(n);
+    for (var i = 0; i < n; i++) {
+        output[i] = 0
+            + (bits[i*8+0]<<0)
+            + (bits[i*8+1]<<1)
+            + (bits[i*8+2]<<2)
+            + (bits[i*8+3]<<3)
+            + (bits[i*8+4]<<4)
+            + (bits[i*8+5]<<5)
+            + (bits[i*8+6]<<6)
+            + (bits[i*8+7]<<7)
+        ;
+    }
+    return output;
+};
+
+Frame.prototype.readBits = function (n) {
     var buf = this._queue[0];
     var bits = this._bits;
-    while (bits.length / 8 < n) {
+    while (bits.length < n) {
         if (!buf) {
             bits.push(1);
             continue;
@@ -48,19 +66,5 @@ Frame.prototype.read = function (n) {
             buf = this._queue[0];
         }
     }
-    var output = new Buffer(n);
-    for (var i = 0; i < n; i++) {
-        output[i] = 0
-            + (bits[i*8+0]<<0)
-            + (bits[i*8+1]<<1)
-            + (bits[i*8+2]<<2)
-            + (bits[i*8+3]<<3)
-            + (bits[i*8+4]<<4)
-            + (bits[i*8+5]<<5)
-            + (bits[i*8+6]<<6)
-            + (bits[i*8+7]<<7)
-        ;
-    }
-    bits.splice(0, n*8);
-    return output;
+    return bits.splice(0, n);
 };
