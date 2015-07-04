@@ -21,7 +21,7 @@ test('read 3 of two bytes', function (t) {
     var p = packer();
     p.write(Buffer([ parseInt('11011011', 2), parseInt('01110010', 2) ]));
     var out = p.read(3);
-    t.equal(bin(out), '0' + '11011011' + '10' + '01110010' + '11111');
+    t.equal(bin(out), '0' + '11011011' + '10' + '01001110' + '11111');
     t.end();
 });
 

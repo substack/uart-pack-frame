@@ -12,7 +12,7 @@ function Frame (opts) {
     this._invert = Boolean(opts.invert);
     this._queue = [];
     this._index = 0;
-    this._prev = 0;
+    this._bits = [];
 }
 
 Frame.prototype.write = function (buf) {
@@ -22,32 +22,44 @@ Frame.prototype.write = function (buf) {
 };
 
 Frame.prototype.read = function (n) {
-    var output = new Buffer(n);
     var buf = this._queue[0];
-    
-    for (var i = 0; i < n; i++) {
-        if (!buf && !this._prev) {
-            output[i] = 255; // fill with stop bits when the queue is empty
+    var bits = this._bits;
+    while (bits.length / 8 < n) {
+        if (!buf) {
+            bits.push(1);
             continue;
         }
-        var b = buf ? buf[this._index] : 255;
-        if (i % 5 === 4) {
-            output[i] = (b >> 1) % 128 + 127;
-        }
-        else {
-            var p = (i % 5) * 2 + 1;
-            output[i] = (b << p) % 256 + (this._prev >> (p-2))
-                + (i % 5 === 0 ? 0 : 1 << (p-1))
-//                + (i % 5 === 0 ? 0 : 1 << (p+1))
-            ;
-        }
-        this._prev = b;
-        this._index++;
-        if (buf && this._index >= buf.length) {
-            this._index = 0;
+        var b = buf[this._index++];
+        bits.push(
+            0, // start bit
+            (b >> 0) % 2,
+            (b >> 1) % 2,
+            (b >> 2) % 2,
+            (b >> 3) % 2,
+            (b >> 4) % 2,
+            (b >> 5) % 2,
+            (b >> 6) % 2,
+            (b >> 7) % 2,
+            1 // end bit
+        );
+        if (this._index >= buf.length) {
             this._queue.shift();
             buf = this._queue[0];
         }
     }
+    var output = new Buffer(n);
+    for (var i = 0; i < n; i++) {
+        output[i] = 0
+            + (bits[i*8+0]<<0)
+            + (bits[i*8+1]<<1)
+            + (bits[i*8+2]<<2)
+            + (bits[i*8+3]<<3)
+            + (bits[i*8+4]<<4)
+            + (bits[i*8+5]<<5)
+            + (bits[i*8+6]<<6)
+            + (bits[i*8+7]<<7)
+        ;
+    }
+    bits.splice(0, n*8);
     return output;
 };
