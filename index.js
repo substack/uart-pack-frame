@@ -12,6 +12,7 @@ function Frame (opts) {
     this._invert = Boolean(opts.invert);
     this._queue = [];
     this._index = 0;
+    this._prev = 0;
 }
 
 Frame.prototype.write = function (buf) {
@@ -23,23 +24,26 @@ Frame.prototype.write = function (buf) {
 Frame.prototype.read = function (n) {
     var output = new Buffer(n);
     var buf = this._queue[0];
-    var prev = 0;
     
     for (var i = 0; i < n; i++) {
-        if (!buf) {
+        if (!buf && !this._prev) {
             output[i] = 255; // fill with stop bits when the queue is empty
             continue;
         }
+        var b = buf ? buf[this._index] : 255;
         if (i % 5 === 4) {
-            output[i] = (buf[this._index] >> 1) % 128 + 127;
+            output[i] = (b >> 1) % 128 + 127;
         }
         else {
             var p = (i % 5) * 2 + 1;
-            output[i] = (buf[this._index] << p) % 256 + prev >> (p+1);
+            output[i] = (b << p) % 256 + (this._prev >> (p-2))
+                + (i % 5 === 0 ? 0 : 1 << (p-1))
+//                + (i % 5 === 0 ? 0 : 1 << (p+1))
+            ;
         }
-        prev = buf[this._index];
+        this._prev = b;
         this._index++;
-        if (this._index >= buf.length) {
+        if (buf && this._index >= buf.length) {
             this._index = 0;
             this._queue.shift();
             buf = this._queue[0];
