@@ -6,6 +6,7 @@ module.exports = Frame;
 function Frame (opts) {
     if (!(this instanceof Frame)) return new Frame(opts);
     if (!opts) opts = {};
+    this._stop = opts.stop === undefined ? 1 : opts.stop;
     
     this._queue = [];
     this._index = 0;
@@ -36,9 +37,12 @@ Frame.prototype.read = function (n) {
             (b >> 4) % 2,
             (b >> 5) % 2,
             (b >> 6) % 2,
-            (b >> 7) % 2,
-            1 // end bit
+            (b >> 7) % 2
         );
+        for (var j = 0; j < this._stop; j++) {
+            bits.push(1); // stop bit(s)
+        }
+        
         if (this._index >= buf.length) {
             this._queue.shift();
             buf = this._queue[0];
