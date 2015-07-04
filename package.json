@@ -1,0 +1,36 @@
+{
+  "name": "uart-pack-frame",
+  "version": "1.0.0",
+  "description": "pack data in the UART format used for serial communication",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tape": "^4.0.0"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/substack/uart-pack-frame.git"
+  },
+  "keywords": [
+    "data",
+    "format",
+    "framing",
+    "pack",
+    "serial",
+    "serialport",
+    "uart"
+  ],
+  "author": "substack",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/substack/uart-pack-frame/issues"
+  },
+  "homepage": "https://github.com/substack/uart-pack-frame#readme"
+}
