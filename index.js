@@ -1,5 +1,3 @@
-var defined = require('defined');
-
 // 8 bits, no parity, 1 stop bit
 // [0abcdefg][h10abcde][fgh10abc][defgh10a][bcdefgh1]
 
@@ -8,8 +6,7 @@ module.exports = Frame;
 function Frame (opts) {
     if (!(this instanceof Frame)) return new Frame(opts);
     if (!opts) opts = {};
-    this._baud = defined(opts.baud, 300);
-    this._invert = Boolean(opts.invert);
+    
     this._queue = [];
     this._index = 0;
     this._bits = [];
