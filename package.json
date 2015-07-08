@@ -1,6 +1,6 @@
 {
   "name": "uart-pack-frame",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "pack data in the UART format used for serial communication",
   "main": "index.js",
   "directories": {
