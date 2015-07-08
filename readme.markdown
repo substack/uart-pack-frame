@@ -45,6 +45,11 @@ Read `n` bits of framed data into `bits`, an array of 0s and 1s.
 If all the written data has been read, `bits` is padded with trailing stop bits
 (1s).
 
+## p.stopped
+
+When there is pending data to write, `p.stopped` is false.
+When there is no more data to read, `p.stopped` is true.
+
 # install
 
 With [npm](https://npmjs.org) do:
