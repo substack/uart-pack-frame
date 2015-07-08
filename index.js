@@ -69,6 +69,7 @@ Frame.prototype.readBits = function (n) {
         
         if (this._index >= buf.length) {
             this._queue.shift();
+            this._index = 0;
             buf = this._queue[0];
         }
     }
