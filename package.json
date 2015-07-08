@@ -9,11 +9,12 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "covert": "^1.1.0",
     "tape": "^4.0.0"
   },
   "scripts": {
-    "test": "tape test/*.js",
-    "coverage": "covert test/*.js"
+    "coverage": "covert test/*.js",
+    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
