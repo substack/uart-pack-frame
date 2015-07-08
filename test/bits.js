@@ -9,12 +9,4 @@ test('read 3 of two bytes as bits', function (t) {
     t.end();
 });
 
-function zpad (n, s) { return Array(n+1-s.length).join('0') + s }
-function bin (buf) { // least-significant bit first
-    var s = '';
-    for (var i = 0; i < buf.length; i++) {
-        s += zpad(8, buf[i].toString(2)).split('').reverse().join('');
-    }
-    return s;
-}
 function bits (str) { return str.split('').map(Number) }
