@@ -23,6 +23,10 @@ Frame.prototype.write = function (buf) {
     }
 };
 
+Frame.prototype.flush = function () {
+    this._queue = [];
+};
+
 Frame.prototype.read = function (n) {
     var bits = this.readBits(n * 8);
     var output = new Buffer(n);
