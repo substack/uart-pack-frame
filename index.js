@@ -11,12 +11,16 @@ function Frame (opts) {
     this._queue = [];
     this._index = 0;
     this._bits = [];
+    this.stopped = true;
 }
 
 Frame.prototype.write = function (buf) {
     if (typeof buf === 'string') buf = Buffer(buf);
     else if (!Buffer.isBuffer(buf)) buf = Buffer(String(buf));
-    if (buf.length) this._queue.push(buf);
+    if (buf.length) {
+        this.stopped = false;
+        this._queue.push(buf);
+    }
 };
 
 Frame.prototype.read = function (n) {
@@ -42,9 +46,11 @@ Frame.prototype.readBits = function (n) {
     var bits = this._bits;
     while (bits.length < n) {
         if (!buf) {
+            this.stopped = true;
             bits.push(1);
             continue;
         }
+        this.stopped = false;
         var b = buf[this._index++];
         bits.push(
             0, // start bit
